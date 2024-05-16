@@ -1,0 +1,81 @@
+diff --git a/boards/px4/sitl/src/sitl_led.c b/boards/px4/sitl/src/sitl_led.c
+index c9d3f4d053..f86e877764 100644
+--- a/boards/px4/sitl/src/sitl_led.c
++++ b/boards/px4/sitl/src/sitl_led.c
+@@ -50,7 +50,7 @@ __END_DECLS
+ 
+ static bool _led_state[2] = { false, false };
+ 
+-__EXPORT void led_init()
++__EXPORT void led_init(void)
+ {
+ 	PX4_DEBUG("LED_INIT");
+ }
+diff --git a/platforms/common/work_queue/hrt_thread.c b/platforms/common/work_queue/hrt_thread.c
+index 8438b0ae2c..8da8b415d1 100644
+--- a/platforms/common/work_queue/hrt_thread.c
++++ b/platforms/common/work_queue/hrt_thread.c
+@@ -113,7 +113,7 @@ static void _sighandler(int sig_num)
+  *
+  ****************************************************************************/
+ 
+-static void hrt_work_process()
++static void hrt_work_process(void)
+ {
+ 	struct wqueue_s *wqueue = &g_hrt_work;
+ 	volatile struct work_s *work;
+diff --git a/platforms/common/work_queue/work_thread.c b/platforms/common/work_queue/work_thread.c
+index b1e0e72355..5109b6ad8a 100644
+--- a/platforms/common/work_queue/work_thread.c
++++ b/platforms/common/work_queue/work_thread.c
+@@ -338,7 +338,7 @@ int work_usrthread(int argc, char *argv[])
+ 
+ #endif /* CONFIG_SCHED_USRWORK */
+ 
+-uint32_t clock_systimer()
++uint32_t clock_systimer(void)
+ {
+ 	//printf("clock_systimer: %0lx\n", hrt_absolute_time());
+ 	return (0x00000000ffffffff & hrt_absolute_time());
+diff --git a/platforms/posix/include/hrt_work.h b/platforms/posix/include/hrt_work.h
+index 6dd2ab5a09..7799d3815c 100644
+--- a/platforms/posix/include/hrt_work.h
++++ b/platforms/posix/include/hrt_work.h
+@@ -48,13 +48,13 @@ int hrt_work_queue(struct work_s *work, worker_t worker, void *arg, uint32_t usd
+ void hrt_work_cancel(struct work_s *work);
+ 
+ static inline void hrt_work_lock(void);
+-static inline void hrt_work_lock()
++static inline void hrt_work_lock(void)
+ {
+ 	px4_sem_wait(&_hrt_work_lock);
+ }
+ 
+ static inline void hrt_work_unlock(void);
+-static inline void hrt_work_unlock()
++static inline void hrt_work_unlock(void)
+ {
+ 	px4_sem_post(&_hrt_work_lock);
+ }
+diff --git a/src/lib/rc/rc_tests/RCTest.cpp b/src/lib/rc/rc_tests/RCTest.cpp
+index 07c45d33c0..3fa2cd41aa 100644
+--- a/src/lib/rc/rc_tests/RCTest.cpp
++++ b/src/lib/rc/rc_tests/RCTest.cpp
+@@ -359,7 +359,7 @@ bool RCTest::sbus2Test()
+ 	bool sbus_frame_drop;
+ 	uint16_t max_channels = sizeof(rc_values) / sizeof(rc_values[0]);
+ 
+-	int rate_limiter = 0;
++//	int rate_limiter = 0;
+ 	unsigned last_drop = 0;
+ 
+ 	while (EOF != (ret = fscanf(fp, "%f,%x,,", &f, &x))) {
+@@ -390,7 +390,7 @@ bool RCTest::sbus2Test()
+ 			last_drop = sbus_frame_drops + sbus_frame_resets;
+ 		}
+ 
+-		rate_limiter++;
++//		rate_limiter++;
+ 	}
+ 
+ 	ut_test(ret == EOF);
