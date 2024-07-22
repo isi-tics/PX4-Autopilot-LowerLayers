@@ -111,7 +111,9 @@
 #include <uORB/topics/vehicle_trajectory_bezier.h>
 #include <uORB/topics/vehicle_trajectory_waypoint.h>
 #include <uORB/topics/velocity_limits.h>
-
+//Rafael
+#include <uORB/topics/battery_status.h>
+/******/
 #if !defined(CONSTRAINED_FLASH)
 # include <uORB/topics/debug_array.h>
 # include <uORB/topics/debug_key_value.h>
@@ -216,6 +218,10 @@ private:
 	void handle_message_request_event(mavlink_message_t *msg);
 
 	void CheckHeartbeats(const hrt_abstime &t, bool force = false);
+
+	//Rafael
+	void handle_message_battery_status_demo(mavlink_message_t *msg);
+	/******/
 
 	/**
 	 * Set the interval at which the given message stream is published.
